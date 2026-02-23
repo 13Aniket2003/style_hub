@@ -1278,18 +1278,34 @@ def auth_view(request):
 
 
 
+# def user_login(request):
+#     if request.method == 'POST':
+#         user_obj = User.objects.filter(email=request.POST.get('email')).first()
+#         if user_obj:
+#             user = authenticate(request, username=user_obj.username, password=request.POST.get('password'))
+#             if user:
+#                 login(request, user)
+#                 return redirect('home')
+#         messages.error(request, 'Invalid email or password.')
+#         return redirect('auth')
+#     return redirect('auth')
+
 def user_login(request):
     if request.method == 'POST':
-        user_obj = User.objects.filter(email=request.POST.get('email')).first()
-        if user_obj:
-            user = authenticate(request, username=user_obj.username, password=request.POST.get('password'))
-            if user:
-                login(request, user)
-                return redirect('home')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = authenticate(
+            request,
+            username=email,
+            password=password
+        )
+        if user:
+            login(request, user)
+            return redirect('home')
+
         messages.error(request, 'Invalid email or password.')
         return redirect('auth')
-    return redirect('auth')
-
 
 
 
