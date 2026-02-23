@@ -1290,22 +1290,38 @@ def auth_view(request):
 #         return redirect('auth')
 #     return redirect('auth')
 
-def user_login(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 
-        user = authenticate(
-            request,
-            username=email,
-            password=password
-        )
-        if user:
+def login_view(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        try:
+            user_obj = User.objects.get(email=email)
+            user = authenticate(
+                request,
+                username=user_obj.username,
+                password=password
+            )
+        except User.DoesNotExist:
+            user = None
+
+        if user is not None:
             login(request, user)
-            return redirect('home')
 
-        messages.error(request, 'Invalid email or password.')
-        return redirect('auth')
+            if user.is_superuser:
+                return redirect("/custom-admin/")
+            else:
+                return redirect("/")
+        else:
+            return render(request, "auth/login.html", {
+                "error": "Invalid email or password"
+            })
+
+    return render(request, "auth/login.html")
 
 
 
