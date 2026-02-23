@@ -1342,68 +1342,43 @@ def auth_view(request):
 #     return render(request, "auth.html")
 
 # store/views.py
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.contrib import messages
-
+from django.contrib.auth.models import User
 
 def auth_view(request):
     if request.method == "POST":
 
-        # 🔹 LOGIN FORM
-        if "password" in request.POST and "confirm_password" not in request.POST:
-            email = request.POST.get("email")
+        # LOGIN
+        if "email" in request.POST and "password" in request.POST:
+            email = request.POST.get("email").strip()
             password = request.POST.get("password")
 
             try:
                 user_obj = User.objects.get(email=email)
-                user = authenticate(
-                    request,
-                    username=user_obj.username,
-                    password=password
-                )
             except User.DoesNotExist:
-                user = None
+                messages.error(request, "Invalid email or password")
+                return redirect("auth")
+
+            user = authenticate(
+                request,
+                username=user_obj.username,   # ✅ THIS IS THE FIX
+                password=password
+            )
 
             if user is not None:
                 login(request, user)
 
                 if user.is_superuser:
                     return redirect("admin_dashboard")
-
-                return redirect("home")
-
-            messages.error(request, "Invalid email or password")
-            return redirect("auth")
-
-        # 🔹 SIGNUP FORM
-        if "confirm_password" in request.POST:
-            name = request.POST.get("full_name")
-            email = request.POST.get("email")
-            password = request.POST.get("password")
-            confirm_password = request.POST.get("confirm_password")
-
-            if password != confirm_password:
-                messages.error(request, "Passwords do not match")
+                else:
+                    return redirect("home")
+            else:
+                messages.error(request, "Invalid email or password")
                 return redirect("auth")
 
-            if User.objects.filter(email=email).exists():
-                messages.error(request, "Email already registered")
-                return redirect("auth")
-
-            user = User.objects.create_user(
-                username=email.split("@")[0],
-                email=email,
-                password=password,
-                first_name=name
-            )
-
-            login(request, user)
-            return redirect("home")
-
-    # 🔹 GET REQUEST
     return render(request, "auth.html")
+      
 
 
 def user_signup(request):
