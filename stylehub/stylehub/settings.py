@@ -23,14 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
  
-DEBUG = bool(os.environ.get("DEBUG", default=0))
+# DEBUG = bool(os.environ.get("DEBUG", default=0))
 # DEBUG = False
- 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","localhost 127.0.0.1 0.0.0.0").split(" ")
+load_dotenv()
 
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG") == "True"
+#ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","localhost 127.0.0.1 0.0.0.0").split(" ")
 
+ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
@@ -55,11 +58,13 @@ REST_FRAMEWORK = {
 }
 
 
-
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -68,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ROOT_URLCONF = 'stylehub.urls'
 
 TEMPLATES = [
@@ -103,19 +109,26 @@ WSGI_APPLICATION = 'stylehub.wsgi.application'
 
 
 
-load_dotenv()
+
+# DATABASES = {
+#     'default' : {
+#         'ENGINE' : 'django.db.backends.postgresql',
+#         'NAME' : os.getenv('DB_NAME'),
+#         'USER' : os.getenv('DB_USER'),
+#         'PASSWORD' : os.getenv('DB_PASSWORD'),
+#         'HOST' : os.getenv('DB_HOST'),
+#         'PORT' : os.getenv('DB_PORT'),
+#     }
+# }
+import dj_database_url
 
 DATABASES = {
-    'default' : {
-        'ENGINE' : 'django.db.backends.postgresql',
-        'NAME' : os.getenv('DB_NAME'),
-        'USER' : os.getenv('DB_USER'),
-        'PASSWORD' : os.getenv('DB_PASSWORD'),
-        'HOST' : os.getenv('DB_HOST'),
-        'PORT' : os.getenv('DB_PORT'),
-    }
+    "default": dj_database_url.parse(
+        os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -153,10 +166,10 @@ USE_TZ = True
 
 
 # The URL to use when referring to static files
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
-# The absolute path to the directory where collectstatic will collect static files for deployment
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# # The absolute path to the directory where collectstatic will collect static files for deployment
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Additional locations the staticfiles app will traverse
 STATICFILES_DIRS = [

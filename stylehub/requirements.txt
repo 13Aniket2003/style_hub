@@ -8,3 +8,6 @@ python-dotenv
 sqlparse
 tzdata
 stripe
+gunicorn
+whitenoise
+dj-database-url
