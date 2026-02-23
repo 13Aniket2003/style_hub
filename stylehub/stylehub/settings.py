@@ -71,11 +71,13 @@ REST_FRAMEWORK = {
 }
 
 
+# settings.py
+
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "stylehub" / "static",
+    BASE_DIR / "static",
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
