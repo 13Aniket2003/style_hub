@@ -1,0 +1,10 @@
+asgiref
+Django
+django-cors-headers
+djangorestframework
+pillow
+psycopg2-binary
+python-dotenv
+sqlparse
+tzdata
+stripe

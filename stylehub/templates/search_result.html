@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        // Inject theme early to prevent flash of white content
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | Stylehub</title>
+    <!-- Load theme.css for global Header/Footer styles -->
+    <link rel="stylesheet" href="{% static 'theme.css' %}?v=3">
+    <!-- Load style4.css for Grid/Content specific styles -->
+    <link rel="stylesheet" href="{% static 'style4.css' %}?v=2">
+    <script src="{% static 'main.js' %}?v=3" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">Style<span>hub</span></div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'pro_list' %}" class="active">Shop</a></li>
+                <li><a href="{% url 'new' %}">New Arrivals</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                {% else %}
+                <li><a href="{% url 'auth' %}">Login</a></li>
+                {% endif %}
+            </ul>
+            <div class="nav-icons" style="display: flex; align-items: center;">
+                <form action="{% url 'search_result' %}" method="GET" class="search-form">
+                    <input type="text" name="q" class="search-input" placeholder="Search..." value="{{ query }}"
+                        required>
+                    <button type="submit" class="search-btn">🔍</button>
+                </form>
+                <a href="{% url 'cart' %}" class="cart-link">
+                    🛒 <span class="global-badge">{{ cart_count|default:0 }}</span>
+                </a>
+                <button id="theme-toggle" class="theme-toggle">🌙</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <header class="search-info">
+            <h1>Search results for: <span>"{{ query }}"</span></h1>
+            <p>{{ products|length }} items found</p>
+        </header>
+
+        {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                {% endif %}
+                <div class="card-details">
+                    <h3>{{ product.name }}</h3>
+                    <p class="price">${{ product.price }}</p>
+                    <a href="{% url 'pro_detail' product.slug %}">
+                        <button class="add-btn">View Item</button>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <div class="empty-icon">🔎</div>
+            <h2>Sorry, we couldn't find any matches</h2>
+            <p>Try checking your spelling or using more general terms.</p>
+            <a href="{% url 'pro_list' %}" class="browse-btn">Browse All Products</a>
+        </div>
+        {% endif %}
+    </main>
+
+
+
+
+    <!-- ADMIN FLOATING BUTTON -->
+    {% if user.is_authenticated and user.is_superuser %}
+    <a href="{% url 'admin_dashboard' %}" class="floating-admin-btn">
+        ⚙️ Admin Panel
+    </a>
+    {% endif %}
+</body>
+
+</html>

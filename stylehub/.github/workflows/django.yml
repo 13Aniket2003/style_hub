@@ -1,0 +1,57 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip'
+
+      # Step 1: Initialize the pre-installed PostgreSQL service
+      - name: Start PostgreSQL
+        run: |
+          sudo systemctl start postgresql
+          # Ensure the 'postgres' user has no password for local testing
+          sudo -u postgres psql -c "ALTER USER postgres PASSWORD '';"
+          # Create the database if it doesn't match the default 'postgres'
+          sudo -u postgres psql -c "CREATE DATABASE stylehub_db;" || echo "DB already exists"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 psycopg2-binary  # Ensure Postgres adapter is present
+
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      # Step 2: Run Tests using internal runner credentials
+      # This bypasses the 'empty secrets' error by providing hardcoded defaults for CI
+      - name: Run Tests
+        env:
+          DB_NAME: stylehub_db
+          DB_USER: postgres
+          DB_PASSWORD: ""
+          DB_HOST: localhost
+          DB_PORT: 5432
+          # Fallback for Secret Key to prevent crash if Secret is not set in GitHub
+          SECRET_KEY: ${{ secrets.SECRET_KEY || 'ci-insecure-test-key-12345' }}
+          STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          DEBUG: "True"
+        run: |
+          python manage.py test
