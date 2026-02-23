@@ -1441,3 +1441,17 @@ def team_emails(request):
 
 def page_not_found(request, exception=None):
     return render(request, '404.html')
+
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+
+def create_admin_once(request):
+    if User.objects.filter(username="admin@stylehub.com").exists():
+        return HttpResponse("Admin already exists")
+
+    user = User.objects.create_superuser(
+        username="admin@stylehub.com",
+        email="admin@stylehub.com",
+        password="Admin@123"
+    )
+    return HttpResponse("Admin created successfully")
