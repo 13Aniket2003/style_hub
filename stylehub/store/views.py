@@ -1373,7 +1373,7 @@ def user_login(request):
 
         messages.error(request, "Invalid email or password")
 
-    return render(request, "auth/login.html")
+    return render(request, "auth.html")
 
 
 def user_signup(request):
