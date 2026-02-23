@@ -1349,7 +1349,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 
-def user_login(request):
+def auth_view(request):
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -1358,21 +1358,21 @@ def user_login(request):
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             messages.error(request, "Invalid email or password")
-            return redirect("login")
+            return redirect("auth")
 
-        auth_user = authenticate(
+        user = authenticate(
             request,
-            username=user.username,   # 🔑 THIS IS THE KEY
+            username=user.username,
             password=password
         )
 
-        if auth_user is None:
+        if user is None:
             messages.error(request, "Invalid email or password")
-            return redirect("login")
+            return redirect("auth")
 
-        login(request, auth_user)
+        login(request, user)
 
-        if auth_user.is_superuser:
+        if user.is_superuser:
             return redirect("admin_dashboard")
 
         return redirect("home")
