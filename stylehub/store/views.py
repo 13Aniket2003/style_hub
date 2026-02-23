@@ -1347,7 +1347,9 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 
 def auth_view(request):
+    print("🔥 AUTH_VIEW HIT 🔥", request.method)
     if request.method == "POST":
+        print("📩 POST DATA:", request.POST)
 
         # LOGIN
         if "email" in request.POST and "password" in request.POST:
