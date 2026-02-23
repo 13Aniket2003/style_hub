@@ -34,7 +34,12 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG=False
 #ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","localhost 127.0.0.1 0.0.0.0").split(" ")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "stylehub-production-6aa5.up.railway.app",
+    ".up.railway.app",
+    "localhost",
+    "127.0.0.1",
+]
 # Application definition
 
 INSTALLED_APPS = [
