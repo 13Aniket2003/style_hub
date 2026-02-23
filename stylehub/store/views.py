@@ -1294,7 +1294,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
-def login_view(request):
+def user_login(request):
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
