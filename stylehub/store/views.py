@@ -1290,9 +1290,10 @@ def auth_view(request):
 #         return redirect('auth')
 #     return redirect('auth')
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 def user_login(request):
     if request.method == "POST":
@@ -1301,28 +1302,27 @@ def user_login(request):
 
         try:
             user_obj = User.objects.get(email=email)
-            user = authenticate(
-                request,
-                username=user_obj.username,
-                password=password
-            )
         except User.DoesNotExist:
-            user = None
+            messages.error(request, "Invalid email or password")
+            return redirect("login")
+
+        user = authenticate(
+            request,
+            username=user_obj.username,  # IMPORTANT
+            password=password
+        )
 
         if user is not None:
             login(request, user)
 
             if user.is_superuser:
-                return redirect("/custom-admin/")
-            else:
-                return redirect("/")
-        else:
-            return render(request, "auth/login.html", {
-                "error": "Invalid email or password"
-            })
+                return redirect("admin_dashboard")
+            return redirect("home")
 
-    return render(request, "auth/login.html")
+        messages.error(request, "Invalid email or password")
+        return redirect("login")
 
+    return render(request, "auth.html")
 
 
 
