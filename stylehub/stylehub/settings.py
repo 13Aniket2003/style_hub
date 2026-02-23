@@ -39,6 +39,12 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://stylehub-production-54cb.up.railway.app",
+]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Application definition
 
 INSTALLED_APPS = [
