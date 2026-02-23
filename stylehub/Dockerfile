@@ -10,8 +10,9 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Collect static files at build/runtime
+RUN python manage.py collectstatic --noinput
+
 EXPOSE 8000
 
-CMD sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn stylehub.wsgi:application --bind 0.0.0.0:${PORT:-8000}"
-
-RUN ls -R /app/static
+CMD sh -c "python manage.py migrate && gunicorn stylehub.wsgi:application --bind 0.0.0.0:${PORT:-8000}"
