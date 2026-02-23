@@ -32,7 +32,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
@@ -65,19 +65,23 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Application definition
 
 INSTALLED_APPS = [
-    "cloudinary",
-    "cloudinary_storage",
-    'accounts',
-    'api',
-    'store',
-    'rest_framework',
-    'rest_framework.authtoken',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # third-party
+    'cloudinary',
+    'cloudinary_storage',
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    # local
+    'accounts',
+    'api',
+    'store',
 ]
 
 REST_FRAMEWORK = {

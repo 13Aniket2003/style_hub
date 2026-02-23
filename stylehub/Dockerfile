@@ -10,7 +10,7 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Collect static files at build/runtime
+# ✅ THIS WILL NOW WORK
 RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
