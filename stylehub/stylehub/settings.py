@@ -49,6 +49,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INSTALLED_APPS = [
     "cloudinary",
+    "cloudinary_storage",
     'accounts',
     'api',
     'store',
@@ -207,7 +208,7 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-MEDIA_URL = "/media/"
+# MEDIA_URL = "/media/"
 # MEDIA_URL = '/media/'
 #MEDIA_ROOT = BASE_DIR / 'media'
 

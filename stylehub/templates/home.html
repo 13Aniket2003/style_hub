@@ -109,8 +109,6 @@
                 <a href="{% url 'pro_detail' product.slug %}" class="product-image">
                     {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                    {% else %}
-                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
                     {% endif %}
                 </a>
                 <div class="card-content">

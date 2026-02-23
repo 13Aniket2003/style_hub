@@ -810,7 +810,7 @@ def admin_add_product(request):
             stock=request.POST.get('stock'),
             description=request.POST.get('description'),
             image=request.FILES.get('image'),
-            image_url=request.POST.get('image_url'),
+            #image_url=request.POST.get('image_url'),
             # SAVING VISIBILITY OPTIONS
             is_featured = request.POST.get('is_featured') == 'on',
             is_new_arrival = request.POST.get('is_new_arrival') == 'on',
@@ -841,8 +841,8 @@ def admin_edit_product(request, product_id):
         
         if request.FILES.get('image'):
             product.image = request.FILES.get('image')
-        if request.POST.get('image_url'):
-            product.image_url = request.POST.get('image_url')
+        # if request.POST.get('image_url'):
+        #     product.image_url = request.POST.get('image_url')
             
         product.is_available = request.POST.get('is_available') == 'on'
         

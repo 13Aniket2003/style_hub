@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from cloudinary.models import CloudinaryField
 
 # ==========================================
 # 1. PRODUCT CATALOG MODULE
@@ -34,9 +35,9 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='products/', blank=True, null=True) 
-
-    image_url = models.URLField(blank=True, null=True)
+    #image = models.ImageField(upload_to='products/', blank=True, null=True) 
+    image = CloudinaryField('image', blank=True, null=True)
+    #image_url = models.URLField(blank=True, null=True)
     stock = models.IntegerField(default=10)
     
     # VISIBILITY TOGGLES

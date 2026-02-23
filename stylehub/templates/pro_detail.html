@@ -68,8 +68,6 @@
             <div class="main-image-wrapper">
                 {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" id="featured">
-                {% else %}
-                <img src="{{ product.image_url }}" alt="{{ product.name }}" id="featured">
                 {% endif %}
             </div>
         </div>
@@ -137,9 +135,9 @@
                 <p>We offer a wide range of fashion products to meet all your needs, from casual fits to formal
                     elegance.</p>
                 <div class="social-icons">
-                    <a href="#">📷</a>
-                    <a href="#">fb</a>
-                    <a href="#">✕</a>
+                    <a href="https://www.instagram.com/">📷</a>
+                    <a href="https://www.facebook.com/">fb</a>
+                    <a href="https://x.com/">✕</a>
                 </div>
             </div>
             <div class="footer-links">
@@ -154,7 +152,7 @@
             </div>
             <div class="footer-contact">
                 <h3>Contact</h3>
-                <p>123 Fashion Street<br>Mumbai, MH 400001</p>
+                <p>LPU, Jalandhar<br>Punjab, 144411</p>
                 <p><a href="{% url 'team_emails' %}">Team Emails Directory</a></p>
                 <p>(+91) 98765 43210</p>
             </div>

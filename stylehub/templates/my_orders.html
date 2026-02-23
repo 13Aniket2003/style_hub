@@ -215,8 +215,6 @@
                 <div class="mini-item">
                     {% if item.product.image %}
                     <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
-                    {% else %}
-                    <img src="{{ product.image_url }}" alt="{{ item.product.name }}">
                     {% endif %}
                     <span class="mini-qty">{{ item.quantity }}</span>
                 </div>
