@@ -1290,10 +1290,63 @@ def auth_view(request):
 #         return redirect('auth')
 #     return redirect('auth')
 
-from django.contrib.auth import authenticate, login, logout
+
+# store/views.py
+
+# from django.contrib.auth.models import User
+# from django.http import HttpResponse
+
+# def create_admin_once(request):
+#     if User.objects.filter(username="admin@stylehub.com").exists():
+#         return HttpResponse("Admin already exists")
+
+#     User.objects.create_superuser(
+#         username="admin@stylehub.com",
+#         email="admin@stylehub.com",
+#         password="Admin@123"
+#     )
+#     return HttpResponse("Admin created successfully")
+
+# from django.contrib.auth import authenticate, login, logout
+# from django.contrib.auth.models import User
+# from django.shortcuts import render, redirect
+# from django.contrib import messages
+
+# def user_login(request):
+#     if request.method == "POST":
+#         email = request.POST.get("email")
+#         password = request.POST.get("password")
+
+#         try:
+#             user_obj = User.objects.get(email=email)
+#         except User.DoesNotExist:
+#             messages.error(request, "Invalid email or password")
+#             return redirect("login")
+
+#         user = authenticate(
+#             request,
+#             username=user_obj.username,  # IMPORTANT
+#             password=password
+#         )
+
+#         if user is not None:
+#             login(request, user)
+
+#             if user.is_superuser:
+#                 return redirect("admin_dashboard")
+#             return redirect("home")
+
+#         messages.error(request, "Invalid email or password")
+#         return redirect("login")
+
+#     return render(request, "auth.html")
+
+# store/views.py
+
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.shortcuts import render, redirect
 
 def user_login(request):
     if request.method == "POST":
@@ -1302,29 +1355,27 @@ def user_login(request):
 
         try:
             user_obj = User.objects.get(email=email)
+            user = authenticate(
+                request,
+                username=user_obj.username,  # 🔑 KEY LINE
+                password=password
+            )
         except User.DoesNotExist:
-            messages.error(request, "Invalid email or password")
-            return redirect("login")
-
-        user = authenticate(
-            request,
-            username=user_obj.username,  # IMPORTANT
-            password=password
-        )
+            user = None
 
         if user is not None:
             login(request, user)
 
+            # 🔁 SUPERUSER → ADMIN PANEL
             if user.is_superuser:
                 return redirect("admin_dashboard")
+
+            # 👤 NORMAL USER
             return redirect("home")
 
         messages.error(request, "Invalid email or password")
-        return redirect("login")
 
     return render(request, "auth.html")
-
-
 
 
 def user_signup(request):
