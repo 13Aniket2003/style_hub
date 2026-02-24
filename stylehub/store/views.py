@@ -1090,8 +1090,8 @@ def place_order(request):
             mode='payment',
             #success_url=request.build_absolute_uri(reverse('payment_success')),
             #cancel_url=request.build_absolute_uri(reverse('payment_cancel')),
-            success_url=request.build_absolute_uri("/payment-success/")
-            cancel_url=request.build_absolute_uri("/payment-cancel/")
+            success_url=request.build_absolute_uri("/payment-success/"),
+            cancel_url=request.build_absolute_uri("/payment-cancel/"),
         )
         
         return redirect(checkout_session.url, code=303)
