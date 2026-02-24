@@ -1186,6 +1186,7 @@ def profile_view(request):
 
         user_profile.address = request.POST.get('address', '')
         user_profile.city = request.POST.get('city', '')
+        user_profile.district = request.POST.get('district', '')
         user_profile.state = request.POST.get('state', '')
         user_profile.zip_code = request.POST.get('zip_code', '')
         user_profile.country = request.POST.get('country', '')
