@@ -1235,7 +1235,10 @@ def cancel_order(request, order_id):
     return redirect('my_orders')
 
 
-
+@user_passes_test(is_admin, login_url='home')
+def admin_order_detail(request, order_id):
+    order = get_object_or_404(Order.objects.prefetch_related('items__product'), id=order_id)
+    return render(request, 'admin_order_detail.html', {'order': order})
 
 
 

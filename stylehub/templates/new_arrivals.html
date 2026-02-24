@@ -68,8 +68,6 @@
                     <a href="{% url 'pro_detail' product.slug %}" target="_blank">
                         {% if product.image %}
                         <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                        {% else %}
-                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
                         {% endif %}
                     </a>
                     <span class="new-tag">New</span>
