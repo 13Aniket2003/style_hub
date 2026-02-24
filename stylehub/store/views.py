@@ -1413,13 +1413,16 @@ def user_signup(request):
         user.first_name = full_name
         user.save()
 
-        send_mail(
+        try:
+            send_mail(
             subject="Welcome to Stylehub 🎉",
             message=f"Hi {full_name}, welcome to Stylehub!",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
-            fail_silently=False,
+            fail_silently=True,  # TEMPORARY
         )
+        except Exception as e:
+            print("EMAIL ERROR:", e)
 
         messages.success(request, "Account created successfully!")
         return redirect("/auth/?tab=login")
