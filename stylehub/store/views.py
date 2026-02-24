@@ -1385,38 +1385,27 @@ def auth_view(request):
       
 
 
-from django.core.mail import send_mail
-from django.conf import settings
-import threading
-import logging
 
-logger = logging.getLogger(__name__)
 
-def send_welcome_email(email, full_name):
-    try:
-        send_mail(
-            subject="Welcome to Stylehub 🎉",
-            message=f"""Hi {full_name},
 
-Welcome to Stylehub!
 
-Your account has been created successfully.
-You can now login and start shopping.
 
-– Team Stylehub
-""",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
-            fail_silently=True,  # VERY IMPORTANT
-        )
-    except Exception as e:
-        logger.error(f"Email failed: {e}")
+
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.contrib.auth.models import User
+from store.email_utils import send_welcome_email
 
 def user_signup(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         full_name = request.POST.get('full_name')
+
+        # Prevent duplicate users
+        if User.objects.filter(username=email).exists():
+            messages.error(request, "Email already registered")
+            return redirect('/auth/?tab=signup')
 
         user = User.objects.create_user(
             username=email,
@@ -1426,12 +1415,8 @@ def user_signup(request):
         user.first_name = full_name
         user.save()
 
-        # 🚀 fire-and-forget email
-        threading.Thread(
-            target=send_welcome_email,
-            args=(email, full_name),
-            daemon=True
-        ).start()
+        # ✅ Send email via SendGrid API (NON-BLOCKING ENOUGH)
+        send_welcome_email(email, full_name)
 
         messages.success(request, "Account created successfully!")
         return redirect('/auth/?tab=login')

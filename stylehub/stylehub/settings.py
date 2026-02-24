@@ -233,14 +233,3 @@ STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 
 
 
-# EMAIL CONFIG — SENDGRID (PRODUCTION SAFE)
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = "apikey"  # THIS IS LITERAL STRING
-EMAIL_HOST_PASSWORD = os.getenv("SENDGRID_API_KEY")
-
-DEFAULT_FROM_EMAIL = os.getenv("EMAIL_FROM")
