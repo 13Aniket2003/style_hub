@@ -1392,6 +1392,8 @@ from django.shortcuts import redirect
 
 def user_signup(request):
     if request.method == "POST":
+        print("🔥 SIGNUP POST HIT")
+
         full_name = request.POST.get("full_name")
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -1412,8 +1414,11 @@ def user_signup(request):
             first_name=full_name
         )
 
-        # ✅ SAFE SENDGRID HTTP CALL
+        print("🔥 USER CREATED, CALLING EMAIL")
+
         send_welcome_email(email, full_name)
+
+        print("🔥 EMAIL FUNCTION RETURNED")
 
         messages.success(request, "Account created successfully!")
         return redirect("/auth/?tab=login")

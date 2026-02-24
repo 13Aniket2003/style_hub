@@ -231,6 +231,5 @@ STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 
 SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
-DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_FROM")
-
+DEFAULT_FROM_EMAIL = "duttaaniket637@gmail.com"
 

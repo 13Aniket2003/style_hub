@@ -1,11 +1,19 @@
+# store/utils.py
+
 import sendgrid
 from sendgrid.helpers.mail import Mail
 from django.conf import settings
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 def send_welcome_email(email, full_name):
+    logger.error("🚀 send_welcome_email CALLED")
+
+    if not settings.SENDGRID_API_KEY:
+        logger.error("❌ SENDGRID_API_KEY MISSING")
+        return
+
     try:
         sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
 
@@ -13,17 +21,21 @@ def send_welcome_email(email, full_name):
             from_email=settings.DEFAULT_FROM_EMAIL,
             to_emails=email,
             subject="Welcome to StyleHub 🎉",
-            plain_text_content=(
-                f"Hi {full_name},\n\n"
-                "Welcome to StyleHub!\n\n"
-                "Your account has been created successfully.\n"
-                "Start shopping now.\n\n"
-                "– Team StyleHub"
-            ),
+            plain_text_content=f"""
+Hi {full_name},
+
+Welcome to StyleHub!
+Your account has been created successfully.
+
+– Team StyleHub
+"""
         )
 
-        sg.send(message)
-        logger.info("Welcome email sent to %s", email)
+        response = sg.send(message)
+
+        logger.error(f"✅ SENDGRID STATUS CODE: {response.status_code}")
+        logger.error(f"✅ SENDGRID BODY: {response.body}")
+        logger.error(f"✅ SENDGRID HEADERS: {response.headers}")
 
     except Exception as e:
-        logger.error("SendGrid error: %s", e)
+        logger.exception("❌ SENDGRID EXCEPTION")
