@@ -1387,20 +1387,36 @@ def auth_view(request):
 
 from django.core.mail import send_mail
 from django.conf import settings
+import threading
+import logging
+
+logger = logging.getLogger(__name__)
+
+def send_welcome_email(email, full_name):
+    try:
+        send_mail(
+            subject="Welcome to Stylehub 🎉",
+            message=f"""Hi {full_name},
+
+Welcome to Stylehub!
+
+Your account has been created successfully.
+You can now login and start shopping.
+
+– Team Stylehub
+""",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[email],
+            fail_silently=True,  # VERY IMPORTANT
+        )
+    except Exception as e:
+        logger.error(f"Email failed: {e}")
 
 def user_signup(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         full_name = request.POST.get('full_name')
-
-        if password != request.POST.get('confirm_password'):
-            messages.error(request, "Passwords do not match.")
-            return redirect('auth')
-
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email already registered.")
-            return redirect('auth')
 
         user = User.objects.create_user(
             username=email,
@@ -1410,30 +1426,15 @@ def user_signup(request):
         user.first_name = full_name
         user.save()
 
-        # ✅ SEND WELCOME EMAIL
-        try:
-            send_mail(
-                subject="Welcome to Stylehub 🎉",
-                message=(
-                    f"Hi {full_name},\n\n"
-                    "Welcome to Stylehub!\n\n"
-                    "Your account has been successfully created.\n"
-                    "You can now login and start shopping.\n\n"
-                    "Regards,\n"
-                    "Team Stylehub"
-                ),
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[email],
-                fail_silently=False,   # IMPORTANT: shows errors in logs
-            )
-        except Exception as e:
-            print("EMAIL ERROR:", e)
+        # 🚀 fire-and-forget email
+        threading.Thread(
+            target=send_welcome_email,
+            args=(email, full_name),
+            daemon=True
+        ).start()
 
-        messages.success(request, "Account created! Please login.")
+        messages.success(request, "Account created successfully!")
         return redirect('/auth/?tab=login')
-
-    return redirect('auth')
-
 
 
 
