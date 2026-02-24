@@ -1463,6 +1463,6 @@ def create_admin_once(request):
     user = User.objects.create_superuser(
         username="admin@stylehub.com",
         email="admin@stylehub.com",
-        password="Admin@123"
+        password="Admin@123",
     )
     return HttpResponse("Admin created successfully")
