@@ -59,7 +59,7 @@
                 <button class="tab-btn" onclick="toggleAuth('signup')">Sign Up</button>
             </div>
 
-            <form id="login-form" class="auth-form active" method="POST" action="{% url 'login' %}">
+            <form id="login-form" class="auth-form active" method="POST" action="{% url 'auth' %}">
                 {% csrf_token %}
                 <div class="input-group">
                     <label>Email Address</label>
