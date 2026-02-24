@@ -1276,8 +1276,8 @@ def wishlist_view(request):
 # 5. AUTHENTICATION MODULE
 # ==========================================
 
-def auth_view(request):
-    return render(request, 'auth.html')
+# def auth_view(request):
+#     return render(request, 'auth.html')
 
 
 
