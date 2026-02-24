@@ -231,12 +231,14 @@ STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = "duttaaniket637@gmail.com"
-EMAIL_HOST_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")
+EMAIL_HOST_USER = "apikey"   # MUST be exactly this string
+EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+
 DEFAULT_FROM_EMAIL = "duttaaniket637@gmail.com"
 
 

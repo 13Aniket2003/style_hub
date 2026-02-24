@@ -1396,6 +1396,9 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 
+from django.core.mail import send_mail
+from django.conf import settings
+
 def user_signup(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -1412,15 +1415,7 @@ def user_signup(request):
 
         send_mail(
             subject="Welcome to Stylehub 🎉",
-            message=f"""Hi {full_name},
-
-Welcome to Stylehub!
-
-Your account has been created successfully.
-You can now login and start shopping.
-
-– Team Stylehub
-""",
+            message=f"Hi {full_name}, welcome to Stylehub!",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
             fail_silently=False,
@@ -1428,7 +1423,6 @@ You can now login and start shopping.
 
         messages.success(request, "Account created successfully!")
         return redirect("/auth/?tab=login")
-
 
 
 
