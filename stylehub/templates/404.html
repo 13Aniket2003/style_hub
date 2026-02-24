@@ -12,9 +12,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found | Stylehub</title>
-    <link rel="stylesheet" href="{% static 'theme.css' %}">
-    <link rel="stylesheet" href="{% static 'style1.css' %}">
-    <script src="{% static 'main.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'theme.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'style1.css' %}?v=2?v=6">
+    <script src="{% static 'main.js' %}?v=6" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         .error-section {
@@ -202,7 +202,7 @@
 
     <header>
         <nav class="navbar">
-            <div class="logo">Style<span>hub</span></div>
+            <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><div class="logo">Style<span>hub</span></div></a>
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}" class="active">Home</a></li>
                 <li><a href="{% url 'pro_list' %}">Shop</a></li>
@@ -241,7 +241,7 @@
     <footer class="site-footer reveal-on-scroll">
         <div class="footer-content">
             <div class="footer-brand">
-                <h2 class="footer-logo">Stylehub™</h2>
+                <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><h2 class="footer-logo">Stylehub™</h2></a>
                 <p>We offer a wide range of fashion products to meet all your needs, from casual fits to formal elegance.</p>
                 <div class="social-icons">
                     <a href="https://www.instagram.com/">📷</a>

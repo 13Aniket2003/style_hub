@@ -12,16 +12,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Arrivals | Stylehub</title>
-    <link rel="stylesheet" href="{% static 'theme.css' %}">
-    <link rel="stylesheet" href="{% static 'style10.css' %}">
-    <script src="{% static 'main.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'theme.css' %}?v=3">
+    <link rel="stylesheet" href="{% static 'style10.css' %}?v=2?v=3">
+    <script src="{% static 'main.js' %}?v=3" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <nav class="navbar">
-        <div class="logo">Style<span>hub</span></div>
+        <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><div class="logo">Style<span>hub</span></div></a>
         <ul class="nav-links">
             <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'pro_list' %}">Shop</a></li>
@@ -68,6 +68,8 @@
                     <a href="{% url 'pro_detail' product.slug %}" target="_blank">
                         {% if product.image %}
                         <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
                         {% endif %}
                     </a>
                     <span class="new-tag">New</span>
@@ -90,7 +92,7 @@
     <footer class="site-footer reveal-on-scroll">
         <div class="footer-content">
             <div class="footer-brand">
-                <h2 class="footer-logo">Stylehub™</h2>
+                <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><h2 class="footer-logo">Stylehub™</h2></a>
                 <p>We offer a wide range of fashion products to meet all your needs, from casual fits to formal
                     elegance.</p>
                 <div class="social-icons">

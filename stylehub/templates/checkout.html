@@ -12,15 +12,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout | Stylehub</title>
-    <link rel="stylesheet" href="{% static 'theme.css' %}">
-    <link rel="stylesheet" href="{% static 'style6.css' %}">
-    <script src="{% static 'main.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'theme.css' %}?v=3">
+    <link rel="stylesheet" href="{% static 'style6.css' %}?v=2">
+    <script src="{% static 'main.js' %}?v=3" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header class="checkout-header">
-        <div class="logo">Style<span>hub</span></div>
+        <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><div class="logo">Style<span>hub</span></div></a>
         <a href="{% url 'cart' %}" class="back-link">← Return to Cart</a>
         <button id="theme-toggle" class="theme-toggle">🌙</button>
     </header>
@@ -80,6 +80,8 @@
                     <div class="item-img">
                          {% if item.product.image %}
                             <img src="{{ item.product.image.url }}" alt="Item">
+                        {% else %}
+                            <img src="{{ item.product.image_url }}" alt="Item">
                         {% endif %}
                         <span class="qty-badge">{{ item.quantity }}</span>
                     </div>
