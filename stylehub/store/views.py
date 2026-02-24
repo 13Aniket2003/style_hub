@@ -1397,26 +1397,26 @@ from django.contrib.auth.models import User
 from store.email_utils import send_welcome_email
 
 def user_signup(request):
+    print("🔥 SIGNUP VIEW HIT 🔥")
+
     if request.method == 'POST':
+        print("🔥 SIGNUP POST 🔥")
+
         email = request.POST.get('email')
-        password = request.POST.get('password')
         full_name = request.POST.get('full_name')
 
-        # Prevent duplicate users
-        if User.objects.filter(username=email).exists():
-            messages.error(request, "Email already registered")
-            return redirect('/auth/?tab=signup')
+        print("📧 EMAIL:", email)
 
         user = User.objects.create_user(
             username=email,
             email=email,
-            password=password
+            password=request.POST.get('password')
         )
-        user.first_name = full_name
-        user.save()
 
-        # ✅ Send email via SendGrid API (NON-BLOCKING ENOUGH)
+        print("👤 USER CREATED")
+
         send_welcome_email(email, full_name)
+        print("📨 EMAIL FUNCTION CALLED")
 
         messages.success(request, "Account created successfully!")
         return redirect('/auth/?tab=login')
