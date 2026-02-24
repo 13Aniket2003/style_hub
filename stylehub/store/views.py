@@ -1390,36 +1390,44 @@ def auth_view(request):
 
 
 
-
+from django.core.mail import send_mail
+from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
-from store.email_utils import send_welcome_email
 
 def user_signup(request):
-    print("🔥 SIGNUP VIEW HIT 🔥")
-
-    if request.method == 'POST':
-        print("🔥 SIGNUP POST 🔥")
-
-        email = request.POST.get('email')
-        full_name = request.POST.get('full_name')
-
-        print("📧 EMAIL:", email)
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        full_name = request.POST.get("full_name")
 
         user = User.objects.create_user(
             username=email,
             email=email,
-            password=request.POST.get('password')
+            password=password
+        )
+        user.first_name = full_name
+        user.save()
+
+        send_mail(
+            subject="Welcome to Stylehub 🎉",
+            message=f"""Hi {full_name},
+
+Welcome to Stylehub!
+
+Your account has been created successfully.
+You can now login and start shopping.
+
+– Team Stylehub
+""",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
         )
 
-        print("👤 USER CREATED")
-
-        send_welcome_email(email, full_name)
-        print("📨 EMAIL FUNCTION CALLED")
-
         messages.success(request, "Account created successfully!")
-        return redirect('/auth/?tab=login')
+        return redirect("/auth/?tab=login")
 
 
 
