@@ -1385,41 +1385,35 @@ def auth_view(request):
       
 
 
-
-
-
-
-
-from django.core.mail import send_mail
-from django.conf import settings
+from store.utils import send_welcome_email
 from django.contrib import messages
-from django.shortcuts import redirect
 from django.contrib.auth.models import User
-
-from django.core.mail import send_mail
-from django.conf import settings
+from django.shortcuts import redirect
 
 def user_signup(request):
     if request.method == "POST":
+        full_name = request.POST.get("full_name")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        full_name = request.POST.get("full_name")
+        confirm = request.POST.get("confirm_password")
+
+        if password != confirm:
+            messages.error(request, "Passwords do not match")
+            return redirect("/auth/?tab=signup")
+
+        if User.objects.filter(username=email).exists():
+            messages.error(request, "Email already registered")
+            return redirect("/auth/?tab=signup")
 
         user = User.objects.create_user(
             username=email,
             email=email,
-            password=password
+            password=password,
+            first_name=full_name
         )
-        user.first_name = full_name
-        user.save()
 
-        send_mail(
-    subject="Welcome to Stylehub 🎉",
-    message=f"Hi {full_name}, welcome to Stylehub!",
-    from_email=settings.DEFAULT_FROM_EMAIL,
-    recipient_list=[email],
-    fail_silently=False,   # IMPORTANT
-)
+        # ✅ SAFE SENDGRID HTTP CALL
+        send_welcome_email(email, full_name)
 
         messages.success(request, "Account created successfully!")
         return redirect("/auth/?tab=login")

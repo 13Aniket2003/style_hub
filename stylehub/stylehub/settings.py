@@ -230,15 +230,7 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = "duttaaniket637@gmail.com"
-EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD")
-
-DEFAULT_FROM_EMAIL = "Stylehub <duttaaniket637@gmail.com>"
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_FROM")
 
 
