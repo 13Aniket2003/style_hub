@@ -1,18 +1,9 @@
-# store/utils.py
-
 import sendgrid
 from sendgrid.helpers.mail import Mail
 from django.conf import settings
-import logging
-
-logger = logging.getLogger("django")
 
 def send_welcome_email(email, full_name):
-    logger.error("🚀 send_welcome_email CALLED")
-
-    if not settings.SENDGRID_API_KEY:
-        logger.error("❌ SENDGRID_API_KEY MISSING")
-        return
+    print("🚀 SENDGRID FUNCTION STARTED")
 
     try:
         sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
@@ -32,10 +23,7 @@ Your account has been created successfully.
         )
 
         response = sg.send(message)
-
-        logger.error(f"✅ SENDGRID STATUS CODE: {response.status_code}")
-        logger.error(f"✅ SENDGRID BODY: {response.body}")
-        logger.error(f"✅ SENDGRID HEADERS: {response.headers}")
+        print("✅ SENDGRID STATUS:", response.status_code)
 
     except Exception as e:
-        logger.exception("❌ SENDGRID EXCEPTION")
+        print("❌ SENDGRID ERROR:", str(e))

@@ -1386,42 +1386,30 @@ def auth_view(request):
 
 
 from store.utils import send_welcome_email
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.shortcuts import redirect
 
 def user_signup(request):
     if request.method == "POST":
-        print("🔥 SIGNUP POST HIT")
-
-        full_name = request.POST.get("full_name")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        confirm = request.POST.get("confirm_password")
-
-        if password != confirm:
-            messages.error(request, "Passwords do not match")
-            return redirect("/auth/?tab=signup")
-
-        if User.objects.filter(username=email).exists():
-            messages.error(request, "Email already registered")
-            return redirect("/auth/?tab=signup")
+        full_name = request.POST.get("full_name")
 
         user = User.objects.create_user(
             username=email,
             email=email,
-            password=password,
-            first_name=full_name
+            password=password
         )
+        user.first_name = full_name
+        user.save()
 
-        print("🔥 USER CREATED, CALLING EMAIL")
+        print("🔥 USER CREATED, CALLING SENDGRID")
 
         send_welcome_email(email, full_name)
 
-        print("🔥 EMAIL FUNCTION RETURNED")
+        print("🔥 SENDGRID FUNCTION FINISHED")
 
         messages.success(request, "Account created successfully!")
         return redirect("/auth/?tab=login")
+           
 
 
 
