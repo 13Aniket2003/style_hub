@@ -1,4 +1,5 @@
 {% load static %}
+<script src="{% static 'js/india_location.js' %}" defer></script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -50,10 +51,10 @@
                     <input type="text" name="address" placeholder="Address" value="{{ profile.address|default:'' }}"
                         required>
                     <div class="form-row">
-                        <select name="state" id="state_select" class="half" required>
+                        <select name="state" id="state" class="half" required>
                             <option value="">Select State</option>
                         </select>
-                        <select name="district" id="district_select" class="half" required>
+                        <select name="district" id="district" class="half" required>
                             <option value="">Select District</option>
                         </select>
                     </div>
@@ -137,8 +138,6 @@
                     <div class="item-img">
                         {% if item.product.image %}
                         <img src="{{ item.product.image.url }}" alt="Item">
-                        {% else %}
-                        <img src="{{ item.product.image_url }}" alt="Item">
                         {% endif %}
                         <span class="qty-badge">{{ item.quantity }}</span>
                     </div>
