@@ -1351,6 +1351,7 @@ def wishlist_view(request):
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
 
 def auth_view(request):
     print("🔥 AUTH_VIEW HIT 🔥", request.method)
