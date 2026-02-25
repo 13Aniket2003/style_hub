@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 550); // slight buffer past 500ms css duration
 
     // Intercept internal link clicks to trigger exit animation
-    const allLinks = document.querySelectorAll('a[href]:not([target="_blank"])');
+    const allLinks = document.querySelectorAll('a[href]:not([target="_blank"]):not([data-no-transition])');
 
     allLinks.forEach(link => {
         link.addEventListener('click', function (e) {

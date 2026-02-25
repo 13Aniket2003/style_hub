@@ -21,7 +21,10 @@
 <body>
 
     <nav class="navbar">
-        <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><div class="logo">Style<span>hub</span></div></a>
+        {% comment %} <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><div class="logo">Style<span>hub</span></div></a> {% endcomment %}
+        <a href="{% url 'home' %}" data-no-transition style="text-decoration: none; color: inherit;">
+        <div class="logo">Style<span>hub</span></div>
+        </a>
         <ul class="nav-links">
             <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'pro_list' %}">Shop</a></li>
@@ -32,7 +35,8 @@
             <!-- LOGOUT REMOVED, PROFILE ADDED -->
             <li><a href="{% url 'profile' %}">Profile</a></li>
             {% else %}
-            <li><a href="{% url 'auth' %}" class="active">Login</a></li>
+            {% comment %} <li><a href="{% url 'auth' %}" class="active">Login</a></li> {% endcomment %}
+            <li><a href="{% url 'auth' %}" data-no-transition class="active">Login</a></li>
             {% endif %}
         </ul>
         <div class="nav-icons" style="display: flex; align-items: center;">
@@ -42,8 +46,10 @@
 
     <div class="main-content">
         <div class="auth-card reveal-on-scroll">
-            <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><div class="card-logo">Style<span>hub</span></div></a>
-
+            {% comment %} <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;"><div class="card-logo">Style<span>hub</span></div></a> {% endcomment %}
+            <a href="{% url 'home' %}" data-no-transition style="text-decoration: none; color: inherit;">
+            <div class="card-logo">Style<span>hub</span></div>
+            </a>
             {% if messages %}
             <div class="messages-container">
                 {% for message in messages %}
@@ -72,7 +78,8 @@
                 </div>
                 <div class="form-options">
                     <label><input type="checkbox" name="remember"> Remember me</label>
-                    <a href="{% url 'password_reset' %}">Forgot Password?</a>
+                    <a href="{% url 'password_reset' %}" data-no-transition>Forgot Password?</a>
+                    {% comment %} <a href="{% url 'password_reset' %}">Forgot Password?</a> {% endcomment %}
                 </div>
                 <button type="submit" class="auth-btn">Sign In</button>
             </form>

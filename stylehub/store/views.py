@@ -1347,80 +1347,105 @@ def wishlist_view(request):
 
 #     return render(request, "auth.html")
 
-# store/views.py
-from django.contrib.auth import authenticate, login
+
+
+
+# ==========================
+# AUTHENTICATION MODULE
+# ==========================
+
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.shortcuts import redirect
-
-def auth_view(request):
-    print("🔥 AUTH_VIEW HIT 🔥", request.method)
-    if request.method == "POST":
-        print("📩 POST DATA:", request.POST)
-
-        # LOGIN
-        if "email" in request.POST and "password" in request.POST:
-            email = request.POST.get("email").strip()
-            password = request.POST.get("password")
-
-            try:
-                user_obj = User.objects.get(email=email)
-            except User.DoesNotExist:
-                messages.error(request, "Invalid email or password")
-                return redirect("auth")
-
-            user = authenticate(
-                request,
-                username=user_obj.username,   # ✅ THIS IS THE FIX
-                password=password
-            )
-
-            if user is not None:
-                login(request, user)
-
-                if user.is_superuser:
-                    return redirect("admin_dashboard")
-                else:
-                    return redirect("home")
-            else:
-                messages.error(request, "Invalid email or password")
-                return redirect("auth")
-
-    return render(request, "auth.html")
-      
-
+from django.shortcuts import render, redirect
 
 from store.utils import send_welcome_email
 
-def user_signup(request):
-    if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        full_name = request.POST.get("full_name")
 
-        user = User.objects.create_user(
-            username=email,
-            email=email,
+def auth_view(request):
+    """
+    Handles LOGIN (GET + POST)
+    """
+    print("🔥 AUTH_VIEW HIT 🔥", request.method)
+
+    if request.method == "POST":
+        print("📩 POST DATA:", request.POST)
+
+        email = request.POST.get("email", "").strip()
+        password = request.POST.get("password", "")
+
+        if not email or not password:
+            messages.error(request, "Email and password are required")
+            return redirect("auth")
+
+        try:
+            user_obj = User.objects.get(email=email)
+        except User.DoesNotExist:
+            messages.error(request, "Invalid email or password")
+            return redirect("auth")
+
+        user = authenticate(
+            request,
+            username=user_obj.username,   # IMPORTANT
             password=password
         )
+
+        if user is not None:
+            login(request, user)
+
+            if user.is_superuser:
+                return redirect("admin_dashboard")
+            return redirect("home")
+
+        messages.error(request, "Invalid email or password")
+        return redirect("auth")
+
+    return render(request, "auth.html")
+
+
+from django.db import IntegrityError
+
+def user_signup(request):
+    if request.method == "POST":
+        email = request.POST.get("email", "").strip()
+        password = request.POST.get("password")
+        confirm = request.POST.get("confirm_password")
+        full_name = request.POST.get("full_name", "").strip()
+
+        if not email or not password or not confirm:
+            messages.error(request, "All fields are required.")
+            return redirect("auth")
+
+        if password != confirm:
+            messages.error(request, "Passwords do not match.")
+            return redirect("auth")
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered.")
+            return redirect("auth")
+
+        try:
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                password=password
+            )
+        except IntegrityError:
+            messages.error(request, "Account already exists.")
+            return redirect("auth")
+
         user.first_name = full_name
         user.save()
 
-        print("🔥 USER CREATED, CALLING SENDGRID")
-
         send_welcome_email(email, full_name)
 
-        print("🔥 SENDGRID FUNCTION FINISHED")
-
-        messages.success(request, "Account created successfully!")
+        messages.success(request, "Account created successfully! Please login.")
         return redirect("/auth/?tab=login")
-           
-
 
 
 def user_logout(request):
     logout(request)
-    return redirect('home')
+    return redirect("home")
 
 
 
