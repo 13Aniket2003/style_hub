@@ -1,7 +1,6 @@
 /* static/main.js */
 
 document.addEventListener('DOMContentLoaded', function () {
-
     // ==============================================
     // 1. SCROLL REVEAL ANIMATION (Intersection Observer)
     // ==============================================
