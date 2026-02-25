@@ -701,7 +701,6 @@ def home(request):
 
 
 
-
 def new_arrivals(request):
     # Only show products with is_new_arrival=True
     new_products = Product.objects.filter(is_available=True, is_new_arrival=True).order_by('-created_at')[:20]
