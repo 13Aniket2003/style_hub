@@ -1,5 +1,5 @@
 {% load static %}
-<script src="{% static 'js/india_location.js' %}" defer></script>
+<script src="{% static 'india_location.js' %}" defer></script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,10 +51,10 @@
                     <input type="text" name="address" placeholder="Address" value="{{ profile.address|default:'' }}"
                         required>
                     <div class="form-row">
-                        <select name="state" id="state" class="half" required>
+                        <select name="state" id="state">
                             <option value="">Select State</option>
                         </select>
-                        <select name="district" id="district" class="half" required>
+                        <select name="district" id="district">
                             <option value="">Select District</option>
                         </select>
                     </div>
@@ -67,7 +67,7 @@
                     </div>
                 </section>
 
-                <script src="{% static 'india_locations.js' %}"></script>
+                <script src="{% static 'india_location.js' %}"></script>
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
                         const stateSelect = document.getElementById("state_select");
