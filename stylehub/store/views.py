@@ -1403,44 +1403,55 @@ def auth_view(request):
     return render(request, "auth.html")
 
 
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.contrib.auth.models import User
+from store.utils import send_welcome_email
 from django.db import IntegrityError
+
 
 def user_signup(request):
     if request.method == "POST":
-        email = request.POST.get("email", "").strip()
-        password = request.POST.get("password")
-        confirm = request.POST.get("confirm_password")
         full_name = request.POST.get("full_name", "").strip()
+        email = request.POST.get("email", "").strip().lower()
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
 
-        if not email or not password or not confirm:
-            messages.error(request, "All fields are required.")
-            return redirect("auth")
-
-        if password != confirm:
+        # 1️⃣ Password mismatch check
+        if password != confirm_password:
             messages.error(request, "Passwords do not match.")
-            return redirect("auth")
+            return redirect("/auth/?tab=signup")
 
+        # 2️⃣ Existing user check
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already registered.")
-            return redirect("auth")
+            return redirect("/auth/?tab=signup")
 
         try:
+            # 3️⃣ Create user safely
             user = User.objects.create_user(
                 username=email,
                 email=email,
                 password=password
             )
-        except IntegrityError:
-            messages.error(request, "Account already exists.")
-            return redirect("auth")
+            user.first_name = full_name
+            user.save()
 
-        user.first_name = full_name
-        user.save()
+            # 4️⃣ Email sending should NEVER crash signup
+            try:
+                send_welcome_email(email, full_name)
+            except Exception as e:
+                print("⚠️ Email failed:", e)
 
-        send_welcome_email(email, full_name)
+            messages.success(request, "Account created successfully! Please login.")
+            return redirect("/auth/?tab=login")
 
-        messages.success(request, "Account created successfully! Please login.")
-        return redirect("/auth/?tab=login")
+        except IntegrityError as e:
+            print("❌ Signup DB error:", e)
+            messages.error(request, "Something went wrong. Try again.")
+            return redirect("/auth/?tab=signup")
+
+    return redirect("auth")
 
 
 def user_logout(request):
