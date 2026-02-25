@@ -55,7 +55,7 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://stylehub-production-2457.up.railway.app",
+    "https://determined-gratitude-production-f139.up.railway.app",
 ]
 
 CSRF_COOKIE_SECURE = True
