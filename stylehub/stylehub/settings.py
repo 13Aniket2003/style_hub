@@ -46,10 +46,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # DEBUG = False
 
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-#DEBUG = os.getenv("DEBUG") == "True"
-DEBUG=False
-#ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","localhost 127.0.0.1 0.0.0.0").split(" ")
+DEBUG = False
 
 ALLOWED_HOSTS = [
     ".up.railway.app",
@@ -58,8 +55,13 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://stylehub-production-54cb.up.railway.app",
+    "https://*.up.railway.app",
 ]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SAMESITE = "Lax"
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Application definition
