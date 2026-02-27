@@ -24,9 +24,6 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
 
-
-
-
 class Product(models.Model):
     # Change this line in your Product model
     category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
@@ -58,8 +55,6 @@ class Product(models.Model):
         return self.name
 
 
-
-
 # ==========================================
 # 2. CART MODULE
 # ==========================================
@@ -72,9 +67,6 @@ class Cart(models.Model):
         return sum(item.get_cost() for item in self.items.all())
 
 
-
-
-
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -82,13 +74,6 @@ class CartItem(models.Model):
 
     def get_cost(self):
         return self.product.price * self.quantity
-
-
-
-
-
-
-
 
 
 # ==========================================
@@ -114,9 +99,6 @@ class Order(models.Model):
         return f"Order #{self.id} by {self.user.username}"
 
 
-
-
-
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -125,13 +107,6 @@ class OrderItem(models.Model):
 
     def get_cost(self):
         return self.price * self.quantity
-
-
-
-
-
-
-
 
 
 # ==========================================
@@ -151,10 +126,6 @@ class UserProfile(models.Model):
         return self.user.username
 
 
-
-
-
-
 @receiver(post_save, sender=User)
 def manage_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -164,9 +135,6 @@ def manage_user_profile(sender, instance, created, **kwargs):
             instance.userprofile.save()
         else:
             UserProfile.objects.create(user=instance)
-
-
-
 
 
 class Wishlist(models.Model):
