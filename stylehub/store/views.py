@@ -391,10 +391,12 @@ def payment_success(request):
             f'Thank you for your order #{order.id}.\nTotal Amount: ${order.total_price}', 
             settings.EMAIL_HOST_USER, 
             [order.email], 
-            fail_silently=True
+            fail_silently=False
         )
-    except: 
-        pass
+        print("✅ Order email sent to {order.email}")
+
+    except Exception as e:
+        print("❌ Order email failed: {e}")
         
     return render(request, 'success.html', {'order': order})
 
@@ -496,8 +498,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-
-from store.utils import send_welcome_email
+from django.core.mail import send_mail
+from django.conf import settings
+#from store.utils import send_welcome_email
 
 
 def auth_view(request):
@@ -544,7 +547,9 @@ def auth_view(request):
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
-from store.utils import send_welcome_email
+#from store.utils import send_welcome_email
+from django.core.mail import send_mail
+from django.conf import settings
 from django.db import IntegrityError
 
 
@@ -555,18 +560,18 @@ def user_signup(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        # 1️⃣ Password mismatch check
+        # 1️ Password mismatch check
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
             return redirect("/auth/?tab=signup")
 
-        # 2️⃣ Existing user check
+        # 2️ Existing user check
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already registered.")
             return redirect("/auth/?tab=signup")
 
         try:
-            # 3️⃣ Create user safely
+            # 3️ Create user safely
             user = User.objects.create_user(
                 username=email,
                 email=email,
@@ -575,17 +580,30 @@ def user_signup(request):
             user.first_name = full_name
             user.save()
 
-            # 4️⃣ Email sending should NEVER crash signup
             try:
-                send_welcome_email(email, full_name)
+                send_mail(
+                    subject="Welcome to StyleHub 🎉",
+                    message=f"Hi {full_name},\n\nYour account has been created successfully!",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[email],
+                    fail_silently=False
+                    )
+                print("✅ Signup email sent to:", email)
+
             except Exception as e:
-                print("⚠️ Email failed:", e)
+                print("❌ Signup email failed:", e)
+
+            # 4️ Email sending should NEVER crash signup
+            # try:
+            #     send_welcome_email(email, full_name)
+            # except Exception as e:
+            #     print("⚠️ Email failed:", e)
 
             messages.success(request, "Account created successfully! Please login.")
             return redirect("/auth/?tab=login")
 
         except IntegrityError as e:
-            print("❌ Signup DB error:", e)
+            print(" Signup DB error:", e)
             messages.error(request, "Something went wrong. Try again.")
             return redirect("/auth/?tab=signup")
 

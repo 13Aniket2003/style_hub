@@ -10,7 +10,7 @@
 /* Use Theme Variables for Backgrounds */
 body {
     background-color: var(--bg-body);
-    background: #dfe6f0;
+    /* background: #dfe6f0; */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -191,6 +191,15 @@ body {
 .auth-form.active {
     display: block;
     animation: fadeIn 0.4s ease;
+}
+
+/* 🔥 FIX: ensure text visibility */
+.auth-card {
+    color: var(--text-main) !important;
+}
+
+input {
+    color: var(--text-main) !important;
 }
 
 @keyframes fadeIn {

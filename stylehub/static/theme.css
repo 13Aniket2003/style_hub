@@ -36,7 +36,7 @@ body {
     background-color: var(--bg-body) !important;
     color: var(--text-main) !important;
     transition: background-color 0.3s ease, color 0.3s ease;
-    opacity: 0;
+    opacity: 1;
     /* Important for initial page enter */
 }
 

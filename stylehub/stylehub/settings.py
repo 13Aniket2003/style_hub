@@ -27,11 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # =========================
 
 STATIC_URL = "/static/"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / "static",
-# ]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
@@ -169,19 +171,17 @@ WSGI_APPLICATION = 'stylehub.wsgi.application'
 import dj_database_url
 import os
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASES = {
+    'default' : {
+        'ENGINE' : 'django.db.backends.postgresql',
+        'NAME' : 'stylehub_db',
+        'USER' : 'postgres',
+        'PASSWORD' : 'postgres',
+        'HOST' : 'localhost',
+        'PORT' : '5432',
+    }
+}
 
-if DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL)
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Password 
@@ -246,6 +246,21 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 
-SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
-DEFAULT_FROM_EMAIL = "duttaaniket637@gmail.com"
+# SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+# DEFAULT_FROM_EMAIL = "duttaaniket637@gmail.com"
 
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'duttaaniket637@gmail.com'
+EMAIL_HOST_PASSWORD = 'leqnfvckebkfeifu'
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+EMAIL_TIMEOUT = 30
